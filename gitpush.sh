@@ -1,5 +1,5 @@
 echo "Running script......."
 git add .
 git commit -m "added to git"
-git push origin master
+git push origin nets
 echo "End of script......."
