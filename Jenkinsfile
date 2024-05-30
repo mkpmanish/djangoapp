@@ -27,7 +27,7 @@ pipeline {
                 steps { script{
                    try{
                         echo "Runing SCA scan..........."
-                        sh 'docker run --user $(id -u):$(id -g) -v $PWD:/src:rw cytopia/bandit -r -f json -o /src/bandit.json /src'
+                        sh 'docker run  -v $PWD:/src:rw secfigo/bandit -r -f json -o /src/bandit.json /src'
 			sh 'ls -ltr /src/bandit.json'
                 } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
