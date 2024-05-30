@@ -1,7 +1,7 @@
 pipeline {
     agent none
     stages {
-	stage('Build App'){
+	stage('-Build App'){
 		agent any
 		steps {
 			git(
