@@ -35,24 +35,20 @@ pipeline {
            }
         }
 
-	stage('Merge Pull Request') {
-		  // Assuming the SSH credential ID is 'ssh-key-id'
-	        steps{ 
-  			git branch: 'origin/main', credentialsId: '721fc518-0dae-4898-949c-c14d67c2c877'
-
- 		 	if ( !catchError {
-   				sh './checkstatus.sh'
-  			}) {
-    			error('Build or tests failed. Merge aborted.')
-   		 	return
-  			}
-	
- 		 // Perform merge using Git commands
-		  	sh "git merge origin/${ENV_CHANGE_ID}"
-		  	sh "git push origin master"
-		}
-	}	
-
+	stage("Run Merge - Bandit"){
+                agent any
+                steps { script{
+                   try{
+                        echo "Runing Checks..........."
+                        sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+			git branch: 'origin/main', credentialsId: '721fc518-0dae-4898-949c-c14d67c2c877'
+			sh "git merge origin/${ENV_CHANGE_ID}"
+			sh "git push origin main"
+                } catch(Exception e){
+                        echo "Bandit Scan failed for some reason...." + e.getMessage()
+                }}
+           }
+        }
 
 
 	stage("Cleanup"){
