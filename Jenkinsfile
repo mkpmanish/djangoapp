@@ -6,7 +6,7 @@ pipeline {
 		steps {
 			git(
         		        url:  'git@github.com:mkpmanish/djangoapp.git',
-             			   branch: 'master',
+             			   branch: 'main',
                			 changelog: true,
                			 poll: true
                 	)
