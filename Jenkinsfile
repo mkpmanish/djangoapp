@@ -45,7 +45,7 @@ pipeline {
 			sh "git merge origin/${ENV_CHANGE_ID}"
 			sh "git push origin main"
                 } catch(Exception e){
-                        echo "Bandit Scan failed for some reason...." + e.getMessage()
+                        echo "Checks for some reason...." + e.getMessage()
                 }}
            }
         }
