@@ -5,7 +5,7 @@ pipeline {
 		agent any
 		steps {
 			git(
-        		        url:  'git@github.com:mkpmanish/djangoapp.git',
+        		        url:  'git@github.com:mkpmanish/django-helloworld.git',
              			   branch: 'master',
                			 changelog: true,
                			 poll: true
@@ -21,6 +21,18 @@ pipeline {
 		}
 	}
 
+        stage("Run SCA"){
+                agent any
+                steps { script{
+                   try{
+                        echo "Runing SCA scan..........."
+                        sh 'docker run -v "$PWD:/src" hysnsec/safety check -r requirements.txt'
+
+                } catch(Exception e){
+                        echo "Scan failed for some reason...." + e.getMessage()
+                }}
+           }
+        }
 
         stage("Run SAST - Bandit"){
                 agent any
@@ -34,6 +46,20 @@ pipeline {
                 }}
            }
         }
+
+
+	stage("Run ZAP"){
+		agent any
+		steps{
+			script{
+			   try{	
+				sh 'docker run -t  -v /tmp:/zap/wrk:rw --rm  ghcr.io/zaproxy/zaproxy:stable zap-baseline.py -t http://$(curl http://checkip.amazonaws.com):8800/ -J output.json'
+			   } catch (Exception e) { 
+				echo "Scan failed for some reason...." + e.getMessage()	
+			   }	
+			}
+		}
+	}
 
 
 	stage("Cleanup"){
