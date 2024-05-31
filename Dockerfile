@@ -5,6 +5,6 @@ WORKDIR /app
 COPY requirements.txt .  
 RUN pip install -r requirements.txt  
 COPY . .  
-
+CMD [ "cat", "requirements.txt"]
 CMD [ "python", "manage.py", "runserver" , "0.0.0.0:8800" ]  
 
