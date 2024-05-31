@@ -38,7 +38,6 @@ pipeline {
 			sh 'sleep 10'
 			sh 'curl http://$(curl http://checkip.amazonaws.com):8800/'
 		  	sh 'cat ./Jenkinsfile'
-			//echo "username is $MY_CREDENTIALS_USR"
 		}
 	}
 
@@ -65,6 +64,7 @@ pipeline {
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
 			echo "${env.ACCESS_TOKEN}"
+			echo "${ACCESS_TOKEN}"
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
                 }
