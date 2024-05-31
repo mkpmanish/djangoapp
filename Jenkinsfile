@@ -54,7 +54,7 @@ pipeline {
 	stage("Cleanup"){
 		agent any
 		steps{
-			sh d'if [ $(docker ps | awk \'{print $1}\' | tail -1) ];then docker stop $(docker ps | awk \'{print $1}\' | tail -1);fi'
+			sh 'if [ $(docker ps | awk \'{print $1}\' | tail -1) ];then docker stop $(docker ps | awk \'{print $1}\' | tail -1);fi'
 		}
 	}
     }
