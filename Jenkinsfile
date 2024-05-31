@@ -71,6 +71,7 @@ pipeline {
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
 			echo "${env.ACCESS_TOKEN}"
 			echo "$ACCESS_TOKEN"
+			echo "${env.ghprbPullId}"
 			sh "printenv"
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
@@ -91,7 +92,7 @@ pipeline {
 				echo "Inside Post-Merge"
 				echo 'running post merge and commenting'
                                 sh 'chmod +x post_comment.sh'
-                                sh "./post_comment.sh $ACCESS_TOKEN"
+                                sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId}"
 				//echo 'date=$(date) && curl -X POST -H "Authorization: token $ACCESS_TOKEN"   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
                   }catch(Exception e){
 			echo "exception"
