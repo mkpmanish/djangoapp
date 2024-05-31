@@ -32,7 +32,6 @@ pipeline {
                         sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
                } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
-			pullRequest.comment("Build Failed ran at today") 
                 }}
            }
         }
