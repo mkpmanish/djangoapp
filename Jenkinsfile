@@ -47,8 +47,7 @@ pipeline {
 				//sh 'git status'
 				//sh "git merge origin/${ENV_CHANGE_ID}"
 				//sh "git push origin main"
-				sh """
-                        	curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
+                        	sh """curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
                             		-d '{ \"ref\": \"$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' \
                             		-u $GIT_USERNAME:$GIT_PASSWORD
                         	"""
@@ -57,25 +56,6 @@ pipeline {
 				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"
 			}
            }
-        }
-
-
-	stage('Post-Build Actions') {
-            steps {
-                script {
-                    if ( currentBuild.result.is hudson.model.Result.SUCCESS ) {
-                        // Successful build, trigger GitHub Actions workflow for merge
-                        sh """
-                        curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
-                            -d '{ \"ref\": \"$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' \
-                            -u $GIT_USERNAME:$GIT_PASSWORD
-                        """
-                    } else {
-                        echo "Build failed! Skipping merge."
-			
-                    }
-                }
-            }
         }
 
 
