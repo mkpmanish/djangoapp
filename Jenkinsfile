@@ -1,6 +1,21 @@
 pipeline {
     agent none
+
+
     stages {
+
+	stage("Cleanup"){
+                agent any
+                steps{ script{ try {
+                        sh 'if [ $(docker ps | awk \'{print $1}\' | tail -1) ];then docker stop $(docker ps | awk \'{print $1}\' | tail -1);fi'
+                }catch(Exception e){
+			echo "No Docker lying around so no cleanup"	
+		}
+	      }
+	    }
+        }
+
+
 	stage('-Build App'){
 		agent any
 	 	environment {
