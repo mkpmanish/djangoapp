@@ -68,38 +68,19 @@ pipeline {
 			sh 'cat ./checkstatus.sh'
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
-			echo 'running post merge and commenting'
+			echo 'running post  merge and commenting'
                         sh 'chmod +x post_comment.sh'
                         sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId} 'Success'"
 
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
 			sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId} 'Blocked'"
-                }
+                	sh "exit 1"
+		}
 	     }
            }
         }
 
-
-	stage('Post-Merge Actions') {
-                environment{
-                        ACCESS_TOKEN=credentials('token');
-                }
-
-            steps {
-                script {try{
-			echo "$ACCESS_TOKEN"
-				echo "Inside Post-Merge"
-				echo 'running post merge and commenting'
-                                sh 'chmod +x post_comment.sh'
-                                sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId} 'Success'"
-				//echo 'date=$(date) && curl -X POST -H "Authorization: token $ACCESS_TOKEN"   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
-                  }catch(Exception e){
-			echo "exception"
-		  }
-		}
-            }
-        }
 
 
 	stage("Cleanup"){
