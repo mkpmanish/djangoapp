@@ -76,6 +76,7 @@ pipeline {
             steps {
                 script {
 			withCredentials([gitUsernamePassword(credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c')]) {
+			sh 'echo $PASSWORD'
 			echo 'running post merge and commenting'
                 	echo 'date=$(date) && curl -X POST -H \'Authorization: token $MY_CREDENTIALS\'   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
 		    // Additional logic for comment content
