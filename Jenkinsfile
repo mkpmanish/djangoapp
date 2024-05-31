@@ -1,8 +1,5 @@
 pipeline {
     agent none
-   credentials {
-        usernamePassword(credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')
-    }
     stages {
 	stage('-Build App'){
 		agent any
@@ -28,13 +25,14 @@ pipeline {
         stage("Run SAST - Bandit"){
                 agent any
                 steps { script{
-                   try{
-                        echo "Runing SCA scan..........."
-                        sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
-                	sh 'cat output.txt'
-		} catch(Exception e){
-                        echo "Bandit Scan failed for some reason...." + e.getMessage()
-                }}
+                   	try{
+                        	echo "Runing SCA scan..........."
+                        	sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
+                		sh 'cat output.txt'
+			} catch(Exception e){
+                        	echo "Bandit Scan failed for some reason...." + e.getMessage()
+                	}
+		}
            }
         }
 
