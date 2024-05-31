@@ -40,13 +40,22 @@ pipeline {
 
 	stage("Check Bandit & Comment"){
                 agent any
-                steps { 
-                        echo "Runing Checks..........."
-                        sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
-			//sh 'git branch: \'origin/main\', credentialsId: \'721fc518-0dae-4898-949c-c14d67c2c877\''
-			//sh 'git status'
-			//sh "git merge origin/${ENV_CHANGE_ID}"
-			//sh "git push origin main"
+                steps { scripts {
+                        	echo "Runing Checks..........."
+                        	sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+				//sh 'git branch: \'origin/main\', credentialsId: \'721fc518-0dae-4898-949c-c14d67c2c877\''
+				//sh 'git status'
+				//sh "git merge origin/${ENV_CHANGE_ID}"
+				//sh "git push origin main"
+				sh """
+                        	curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
+                            		-d '{ \"ref\": \"$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' \
+                            		-u $GIT_USERNAME:$GIT_PASSWORD
+                        	"""
+			}catch(Exception e){
+				echo "Build failed! Skipping merge."	
+				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"
+			}
            }
         }
 
@@ -63,6 +72,7 @@ pipeline {
                         """
                     } else {
                         echo "Build failed! Skipping merge."
+			
                     }
                 }
             }
