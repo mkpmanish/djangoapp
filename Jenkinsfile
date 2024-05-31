@@ -54,9 +54,10 @@ pipeline {
 				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"i
 				sh "git status"
 				echo "Ending Checks -------------"	
-			}
-           }
-        }
+				}
+           		}
+        	}
+	}
 
 
 	stage("Cleanup"){
