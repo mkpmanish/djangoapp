@@ -44,10 +44,16 @@ pipeline {
                         try{
 				echo "Runing Checks..........."
                         	sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
-                        	sh """curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches -d '{ \"ref\": \"\$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' -u $GIT_USERNAME:$GIT_PASSWORD"""
+                        	//sh """curl -X POST -H 'Accept: application/json' https://api.github.com/repos/mkpmanish/djangoapp/dispatches -d '{ \"ref\": \"\$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' -u $GIT_USERNAME:$GIT_PASSWORD"""
+                                sh "curl -X POST -H 'Authorization: token ' ${GIT_USERNAME}:${GIT_PASSWORD} ' https://api.github.com/repos/mkpmanish/djangoapp/pulls/\$(github pullRequest number)/reviews -d '{ \"body\": \"Successful build! Automatically approved.\", \"event\": \"APPROVE\" }'"
 			} catch(Exception e){
 				echo "Build failed! Skipping merge."	
-				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"
+				sh "curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
+                        -d '{ \"ref\": \"$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' \
+                        -u $GIT_USERNAME:$GIT_PASSWORD"
+				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"i
+				sh "git status"
+				echo "Ending Checks -------------"	
 			}
            }
         }
