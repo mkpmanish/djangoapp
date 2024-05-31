@@ -29,10 +29,24 @@ pipeline {
                    try{
                         echo "Runing SCA scan..........."
                         //sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
-                        sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
+                        sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
                } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
                 }}
+           }
+        }
+
+	stage("Run Merge"){
+                agent any
+                steps { script{
+                   try{
+			sh 'cat ./checkstatus.sh'
+                        echo "Runing Checks..........."
+                        sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+                   } catch(Exception e){
+                        echo "Bandit Scan failed for some reason...." + e.getMessage()
+                }
+	     }
            }
         }
 
