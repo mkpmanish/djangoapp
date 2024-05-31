@@ -61,7 +61,7 @@ pipeline {
                 
 		
 		environment{
-			ACCESS_TOKEN=credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c');
+			ACCESS_TOKEN=credentials('token');
 		}
 		 steps { 
 		  script{
@@ -82,7 +82,7 @@ pipeline {
 
 	stage('Post-Merge Actions') {
                 environment{
-                        ACCESS_TOKEN=credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c');
+                        ACCESS_TOKEN=credentials('token');
                 }
 
             steps {
