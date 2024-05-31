@@ -60,9 +60,9 @@ pipeline {
 	stage('Post-Merge Actions') {
             steps {
                 script {
-                    def comment = 'Build result: ' + currentBuild.result.toString()
-                    // Additional logic for comment content
-                    pullRequest comment(body: comment)
+			echo 'running post merge and commenting'
+                	echo 'date=$(date) && curl -X POST -H \'Authorization: token $MY_CREDENTIALS\'   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
+		    // Additional logic for comment content
                 }
             }
         }
