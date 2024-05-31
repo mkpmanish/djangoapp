@@ -68,7 +68,7 @@ pipeline {
 			sh 'cat ./checkstatus.sh'
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
-			echo 'running post merge and commenting'
+			echo 'running post  merge and commenting'
                         sh 'chmod +x post_comment.sh'
                         sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId} 'Success'"
 
