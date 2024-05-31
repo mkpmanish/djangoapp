@@ -1,12 +1,15 @@
 pipeline {
     agent none
+   credentials {
+        usernamePassword(credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')
+    }
     stages {
 	stage('-Build App'){
 		agent any
 		steps {
 			git(
         		        url:  'git@github.com:mkpmanish/djangoapp.git',
-             			   branch: 'master',
+             			   branch: 'main',
                			 changelog: true,
                			 poll: true
                 	)
@@ -27,11 +30,25 @@ pipeline {
                 steps { script{
                    try{
                         echo "Runing SCA scan..........."
-                        sh 'docker run --user $(id -u):$(id -g) -v $PWD:/src:rw cytopia/bandit -r -f json -o /src/bandit.json /src'
-			sh 'ls -ltr /src/bandit.json'
-                } catch(Exception e){
+                        sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
+                	sh 'cat output.txt'
+		} catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
                 }}
+           }
+        }
+
+	stage("Check Bandit & Comment"){
+                agent any
+                steps { scripts {
+                        try{
+				echo "Runing Checks..........."
+                        	sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+                        	sh """curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches -d '{ \"ref\": \"\$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' -u $GIT_USERNAME:$GIT_PASSWORD"""
+			} catch(Exception e){
+				echo "Build failed! Skipping merge."	
+				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"
+			}
            }
         }
 
