@@ -64,7 +64,7 @@ pipeline {
 			ACCESS_TOKEN=credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c');
 		}
 		 steps { 
-		
+		:
 		  script{
                     try{
 			sh 'cat ./checkstatus.sh'
@@ -91,8 +91,9 @@ pipeline {
 			echo "$ACCESS_TOKEN"
 				echo "Inside Post-Merge"
 				echo 'running post merge and commenting'
-                		echo 'date=$(date) && curl -X POST -H "Authorization: token $ACCESS_TOKEN"   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
-		    // Additional logic for comment content
+                                sh 'chmod +x post_comment.sh'
+                                sh "./post_comment.sh $ACCESS_TOKEN"
+				//echo 'date=$(date) && curl -X POST -H "Authorization: token $ACCESS_TOKEN"   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
                   }catch(Exception e){
 			echo "exception"
 		  }
