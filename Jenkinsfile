@@ -64,6 +64,7 @@ pipeline {
 			sh 'cat ./checkstatus.sh'
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+			echo "${env.ACCESS_TOKEN}"
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
                 }
