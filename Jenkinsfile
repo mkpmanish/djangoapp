@@ -4,12 +4,12 @@ pipeline {
 	stage('-Build App'){
 		agent any
 		steps {
-			git(
-        		        url:  'git@github.com:mkpmanish/djangoapp.git',
-             			   branch: 'main',
-               			 changelog: true,
-               			 poll: true
-                	)
+			//git(
+        		//        url:  'git@github.com:mkpmanish/djangoapp.git',
+             		//	   branch: 'main',
+               		//	 changelog: true,
+               		//	 poll: true
+                	//)
 			sh 'grep -ri 8888 *'
 			sh 'uname -a'
 			sh 'hostname'
