@@ -19,7 +19,7 @@ pipeline {
 	stage('-Build App'){
 		agent any
 	 	environment {
-        		MY_CREDENTIALS = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
+        		AACCESS_TOKEN = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
     		}
 
 		steps {
@@ -38,7 +38,6 @@ pipeline {
 			sh 'sleep 10'
 			sh 'curl http://$(curl http://checkip.amazonaws.com):8800/'
 		  	sh 'cat ./Jenkinsfile'
-			//echo "username is $MY_CREDENTIALS_USR"
 		}
 	}
 
@@ -59,11 +58,21 @@ pipeline {
 
 	stage("Run Merge"){
                 agent any
-                steps { script{
-                   try{
+                
+		
+		environment{
+			ACCESS_TOKEN=credentials('token');
+		}
+		 steps { 
+		  script{
+                    try{
 			sh 'cat ./checkstatus.sh'
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+			echo "${env.ACCESS_TOKEN}"
+			echo "$ACCESS_TOKEN"
+			echo "${env.ghprbPullId}"
+			sh "printenv"
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
                 }
@@ -73,13 +82,21 @@ pipeline {
 
 
 	stage('Post-Merge Actions') {
+                environment{
+                        ACCESS_TOKEN=credentials('token');
+                }
+
             steps {
-                script {
-			withCredentials([gitUsernamePassword(credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c')]) {
-			echo 'running post merge and commenting'
-                	echo 'date=$(date) && curl -X POST -H \'Authorization: token $MY_CREDENTIALS\'   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
-		    // Additional logic for comment content
-                  }
+                script {try{
+			echo "$ACCESS_TOKEN"
+				echo "Inside Post-Merge"
+				echo 'running post merge and commenting'
+                                sh 'chmod +x post_comment.sh'
+                                sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId}"
+				//echo 'date=$(date) && curl -X POST -H "Authorization: token $ACCESS_TOKEN"   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
+                  }catch(Exception e){
+			echo "exception"
+		  }
 		}
             }
         }
