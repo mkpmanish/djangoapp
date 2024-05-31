@@ -4,7 +4,7 @@ pipeline {
 
     stages {
 
-	stage("Cleanup"){
+	stage("Pre-Runup-Cleanup"){
                 agent any
                 steps{ script{ try {
                         sh 'if [ $(docker ps | awk \'{print $1}\' | tail -1) ];then docker stop $(docker ps | awk \'{print $1}\' | tail -1);fi'
