@@ -17,11 +17,11 @@ pipeline {
 			sh 'docker run -p 8800:8800 -d myhellopy'
 			sh 'sleep 10'
 			sh 'curl http://$(curl http://checkip.amazonaws.com):8800/'
-		  		
+		  	sh 'cat ./Jenkinsfile'
 		}
 	}
 
-
+ 
         stage("Run SAST - Bandit"){
                 agent any
                 steps { script{
@@ -30,7 +30,8 @@ pipeline {
                         //sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
                         sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
 			sh 'ls -ltr /src/bandit.json'
-                } catch(Exception e){
+			pullRequest.comment("Build ran at today") 
+               } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
                 }}
            }
