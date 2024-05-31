@@ -27,6 +27,7 @@ pipeline {
                 steps { script{
                    try{
                         echo "Runing SCA scan..........."
+                        //sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
                         sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
 			sh 'ls -ltr /src/bandit.json'
                 } catch(Exception e){
