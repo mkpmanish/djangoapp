@@ -19,7 +19,7 @@ pipeline {
 	stage('-Build App'){
 		agent any
 	 	environment {
-        		ACCESS_TOKEN = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
+        		AACCESS_TOKEN = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
     		}
 
 		steps {
@@ -58,12 +58,20 @@ pipeline {
 
 	stage("Run Merge"){
                 agent any
-                steps { script{
-                   try{
+                
+		
+		environment{
+			ACCESS_TOKEN=credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c');
+		}
+		 steps { 
+		
+		  script{
+                    try{
 			sh 'cat ./checkstatus.sh'
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
 			echo "${env.ACCESS_TOKEN}"
+			echo "$ACCESS_TOKEN"
 			sh "printenv"
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
