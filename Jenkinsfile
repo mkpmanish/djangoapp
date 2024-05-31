@@ -3,12 +3,17 @@ pipeline {
     stages {
 	stage('-Build App'){
 		agent any
+	 	environment {
+        		MY_CREDENTIALS = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
+    		}
+
 		steps {
 			git(
         		        url:  'git@github.com:mkpmanish/djangoapp.git',
              			   branch: 'dev',
                			 changelog: true,
-               			 poll: true
+               			credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c',
+				 poll: true
                 	)
 			sh 'grep -ri 8888 *'
 			sh 'uname -a'
@@ -18,6 +23,7 @@ pipeline {
 			sh 'sleep 10'
 			sh 'curl http://$(curl http://checkip.amazonaws.com):8800/'
 		  	sh 'cat ./Jenkinsfile'
+			//echo "username is $MY_CREDENTIALS_USR"
 		}
 	}
 
@@ -48,6 +54,17 @@ pipeline {
                 }
 	     }
            }
+        }
+
+
+	stage('Post-Merge Actions') {
+            steps {
+                script {
+			echo 'running post merge and commenting'
+                	echo 'date=$(date) && curl -X POST -H \'Authorization: token $MY_CREDENTIALS\'   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
+		    // Additional logic for comment content
+                }
+            }
         }
 
 
