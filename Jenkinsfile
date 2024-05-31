@@ -41,7 +41,7 @@ pipeline {
                 steps { script{
                    try{
 			sh 'cat ./checkstatus.sh'
-                        echo "Runing Checks if High is present..........."
+                        echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
