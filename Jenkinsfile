@@ -3,9 +3,9 @@ pipeline {
     stages {
 	stage('-Build App'){
 		agent any
-	 	//environment {
-        	//	MY_CREDENTIALS = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
-    		//}
+	 	environment {
+        		MY_CREDENTIALS = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
+    		}
 
 		steps {
 			git(
