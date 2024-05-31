@@ -25,17 +25,15 @@ pipeline {
         stage("Run SAST - Bandit"){
                 agent any
                 steps { script{
-                   	try{
-                        	echo "Runing SCA scan..........."
-                        	sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
-                		sh 'cat output.txt'
-			} catch(Exception e){
-                        	echo "Bandit Scan failed for some reason...." + e.getMessage()
-                	}
-		}
+                   try{
+                        echo "Runing SCA scan..........."
+                        sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
+			sh 'ls -ltr /src/bandit.json'
+                } catch(Exception e){
+                        echo "Bandit Scan failed for some reason...." + e.getMessage()
+                }}
            }
         }
-
 
 
 	stage("Cleanup"){
