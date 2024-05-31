@@ -3,7 +3,7 @@ var=$(cat /var/lib/jenkins/workspace/NS-GITHUB-JENKINS/output.txt  | grep "High"
 
 echo $var
 if [ "$var" -gt "0" ]
-then;
+then
 	echo "High Vulnerability Found...Build will fail"
 	exit 1
 else
