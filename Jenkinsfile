@@ -1,5 +1,8 @@
 pipeline {
     agent none
+   credentials {
+        usernamePassword(credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')
+    }
     stages {
 	stage('-Build App'){
 		agent any
@@ -35,7 +38,7 @@ pipeline {
            }
         }
 
-	stage("Run Merge - Bandit"){
+	stage("Check Bandit & Comment"){
                 agent any
                 steps { 
                         echo "Runing Checks..........."
@@ -45,6 +48,24 @@ pipeline {
 			//sh "git merge origin/${ENV_CHANGE_ID}"
 			//sh "git push origin main"
            }
+        }
+
+
+	stage('Post-Build Actions') {
+            steps {
+                script {
+                    if ( currentBuild.result.is hudson.model.Result.SUCCESS ) {
+                        // Successful build, trigger GitHub Actions workflow for merge
+                        sh """
+                        curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
+                            -d '{ \"ref\": \"$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' \
+                            -u $GIT_USERNAME:$GIT_PASSWORD
+                        """
+                    } else {
+                        echo "Build failed! Skipping merge."
+                    }
+                }
+            }
         }
 
 
