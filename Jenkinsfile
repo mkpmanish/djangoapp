@@ -21,6 +21,7 @@ pipeline {
 		}
 	}
 
+
  
         stage("Run SAST - Bandit"){
                 agent any
@@ -29,10 +30,10 @@ pipeline {
                         echo "Runing SCA scan..........."
                         //sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
                         sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
-			sh 'ls -ltr /src/bandit.json'
-			pullRequest.comment("Build ran at today") 
+			pullRequest.comment("Build passed ran at today") 
                } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
+			pullRequest.comment("Build Failed ran at today") 
                 }}
            }
         }
