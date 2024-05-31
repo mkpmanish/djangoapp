@@ -60,10 +60,12 @@ pipeline {
 	stage('Post-Merge Actions') {
             steps {
                 script {
+			withCredentials([gitUsernamePassword(credentialsId: '', gitToolName: 'git-tool')]) {
 			echo 'running post merge and commenting'
                 	echo 'date=$(date) && curl -X POST -H \'Authorization: token $MY_CREDENTIALS\'   -d \'{ "body": "successfull - $date" }\'  \'https://api.github.com/repos/mkpmanish/djangoapp/issues/40/comments\''
 		    // Additional logic for comment content
-                }
+                  }
+		}
             }
         }
 
@@ -75,4 +77,5 @@ pipeline {
 		}
 	}
     }
+
 }
