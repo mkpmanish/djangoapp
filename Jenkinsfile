@@ -51,6 +51,17 @@ pipeline {
         }
 
 
+	stage('Post-Merge Actions') {
+            steps {
+                script {
+                    def comment = 'Build result: ' + currentBuild.result.toString()
+                    // Additional logic for comment content
+                    pullRequest comment(body: comment)
+                }
+            }
+        }
+
+
 	stage("Cleanup"){
 		agent any
 		steps{
