@@ -37,17 +37,13 @@ pipeline {
 
 	stage("Run Merge - Bandit"){
                 agent any
-                steps { script{
-                   try{
+                steps { 
                         echo "Runing Checks..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
 			//sh 'git branch: \'origin/main\', credentialsId: \'721fc518-0dae-4898-949c-c14d67c2c877\''
 			//sh 'git status'
 			//sh "git merge origin/${ENV_CHANGE_ID}"
 			//sh "git push origin main"
-                } catch(Exception e){
-                        echo "Checks for some reason...." + e.getMessage()
-                }}
            }
         }
 
