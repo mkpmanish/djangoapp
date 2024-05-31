@@ -51,7 +51,7 @@ pipeline {
 				sh "curl -X POST -H 'Accept: application/json' https://api.github.com/repos/your-org/your-repo/dispatches \
                         -d '{ \"ref\": \"$(git rev-parse --abbrev-ref HEAD)\", \"event_type\": \"pull_request\" }' \
                         -u $GIT_USERNAME:$GIT_PASSWORD"
-				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"i
+				sh "git config core.commentSignOff false && git commit --empty --message 'Build failed. Merge blocked.' && git push origin HEAD:main"
 				sh "git status"
 				echo "Ending Checks -------------"	
 				}
