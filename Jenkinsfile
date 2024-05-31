@@ -58,12 +58,20 @@ pipeline {
 
 	stage("Run Merge"){
                 agent any
+                environment{
+                        ACCESS_TOKEN=credentials('token');
+                }
+
 		 steps { 
 		  script{
                     try{
 			sh 'cat ./checkstatus.sh'
                         echo "Runing Checks if High is present or not..........."
                         sh 'chmod +x checkstatus.sh && ./checkstatus.sh'
+			echo 'running post merge and commenting'
+                        sh 'chmod +x post_comment.sh'
+                        sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId} 'Success'"
+
                    } catch(Exception e){
                         echo "Bandit Scan failed for some reason...." + e.getMessage()
 			sh "./post_comment.sh $ACCESS_TOKEN ${env.ghprbPullId} 'Blocked'"
