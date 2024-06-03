@@ -49,7 +49,7 @@ pipeline {
                    try{
                         echo "Runing SCA scan..........."
                         //sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest'
-                        sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
+                        //sh 'docker run --rm --volume /var/lib/jenkins/workspace/NS-GITHUB-JENKINS:/src:rw secfigo/bandit:latest > output.txt'
                         sh 'docker run --rm --volume ./:/src:rw secfigo/bandit:latest > output.txt'
 			sh 'cat ./output.txt'
                } catch(Exception e){
