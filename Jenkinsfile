@@ -19,7 +19,7 @@ pipeline {
 	stage('-Build App'){
 		agent any
 	 	environment {
-        		AACCESS_TOKEN = credentials('6ef6ab6d-4f21-46d1-a173-e97f829e294c')
+        		AACCESS_TOKEN = credentials('token')
     		}
 
 		steps {
@@ -27,7 +27,7 @@ pipeline {
         		        url:  'git@github.com:mkpmanish/djangoapp.git',
              			   branch: 'dev',
                			 changelog: true,
-               			credentialsId: '6ef6ab6d-4f21-46d1-a173-e97f829e294c',
+               			credentialsId: 'token',
 				 poll: true
                 	)
 			sh 'grep -ri 8888 *'
